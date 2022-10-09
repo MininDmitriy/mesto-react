@@ -1,37 +1,25 @@
-import React from 'react';
+import {useState, useEffect} from 'react';
 import api from '../utils/api';
 import Card from './Card';
 
 function Main(props) {
-  const [userName, setUserName] = React.useState();
-  const [userDescription, setUserDescription] = React.useState();
-  const [userAvatar, setUserAvatar] = React.useState();
-  const [cards, setCards] = React.useState([]);
+  const [userName, setUserName] = useState('');
+  const [userDescription, setUserDescription] = useState('');
+  const [userAvatar, setUserAvatar] = useState('');
+  const [cards, setCards] = useState([]);
 
-  React.useEffect(() => {
-    api.getInfoAboutProfile()
-      .then((userData) => {
+  useEffect(() => {
+    Promise.all([api.getInfoAboutProfile(), api.getInfoAboutCards()])
+      .then(([userData, data]) => {
         setUserName(userData.name);
         setUserDescription(userData.about);
         setUserAvatar(userData.avatar);
-      })
-      .catch(err => {
-        console.log(err);
-      })
-  }, [])
-
-  React.useEffect(() => {
-    api.getInfoAboutCards()
-      .then((data) => {
         setCards(data);
       })
       .catch(err => {
         console.log(err);
       })
   }, [])
-
-
-  const newCards = cards.map((item) => <Card key={item._id} card={item} onCardClick={props.onClick}/>);
 
   return (
     <main className="main root__main">
@@ -50,12 +38,12 @@ function Main(props) {
 
       <section className="elements main__elements">
         <ul className="elements__cards">
-          {newCards}
+          {cards.map((item) => <Card key={item._id} card={item} onCardClick={props.onClick}/>)}
         </ul>
       </section>
 
     </main>
-  );
+  )
 }
 
 export default Main;
