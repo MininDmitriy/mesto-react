@@ -18,7 +18,7 @@ class Api {
     }).then(this._checkResponse);
   }
 
-  changeProfile(newName, newInfo) {
+  changeProfile({newName, newInfo}) {
     return fetch(`${this._url}users/me`, {
       method: 'PATCH',
       headers: this._headers,
@@ -29,7 +29,7 @@ class Api {
     }).then(this._checkResponse);
   }
 
-  changeAvatar(avatarNew) {
+  changeAvatar({avatarNew}) {
     return fetch(`${this._url}users/me/avatar`, {
       method: 'PATCH',
       headers: this._headers,
@@ -39,7 +39,7 @@ class Api {
     }).then(this._checkResponse);
   }
 
-  addNewCard(name, link) {
+  addNewCard({name, link}) {
     return fetch(`${this._url}cards`, {
       method: 'POST',
       headers: this._headers,
@@ -57,18 +57,18 @@ class Api {
     }).then(this._checkResponse);
   }
 
-  deleteLikeCard(id) {
-    return fetch(`${this._url}cards/${id}/likes`, {
-      method: 'DELETE',
-      headers: this._headers
-    }).then(this._checkResponse);
-  }
-
-  addLikeCard(id) {
-    return fetch(`${this._url}cards/${id}/likes`, {
-      method: 'PUT',
-      headers: this._headers
-    }).then(this._checkResponse);
+  changeLikeCardStatus(cardId, cardHaveMyLike) {
+    if(cardHaveMyLike) {
+      return fetch(`${this._url}cards/${cardId}/likes`, {
+        method: 'PUT',
+        headers: this._headers
+      }).then(this._checkResponse);
+    } else {
+      return fetch(`${this._url}cards/${cardId}/likes`, {
+        method: 'DELETE',
+        headers: this._headers
+      }).then(this._checkResponse);
+    }
   }
 
   _checkResponse(res) {

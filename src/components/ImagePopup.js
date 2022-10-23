@@ -1,5 +1,3 @@
-import React from 'react';
-
 function ImagePopup(props) {
   const className = `popup popup_background-color popup_type_open-picture ${props.card.bool ? 'popup_opened' : ''}`;
 
