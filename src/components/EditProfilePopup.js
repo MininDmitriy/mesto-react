@@ -30,11 +30,11 @@ function EditProfilePopup(props) {
   }
 
   return (
-    <PopupWithForm onClose={props.onClose} isOpen={props.isOpen ? 'popup_opened' : ''} title="Редактировать профиль" buttonText="Сохранить" name="form_name" onSubmit={handleSubmit}>
+    <PopupWithForm onClose={props.onClose} isOpen={props.isOpen ? 'popup_opened' : ''} title="Редактировать профиль" buttonText={props.buttonText ?  'Сохранение...' : 'Сохранить'} name="form_name" onSubmit={handleSubmit}>
       <>
-        <input type="text" name="popup__input-text_fullname" className="popup__input popup__input_form_name" minLength="2" maxLength="40" placeholder="Имя" required value={name} onChange={handleChangeName} />
+        <input type="text" name="popup__input-text_fullname" className="popup__input popup__input_form_name popup__input_border-bottom_black" minLength="2" maxLength="40" placeholder="Имя" required value={name} onChange={handleChangeName} />
         <span className="popup__input-text popup__input-text_fullname-error"></span>
-        <input type="text" name="popup__input-text_profession" className="popup__input popup__input_form_profession" minLength="2" maxLength="200" placeholder="Профессия" required value={description} onChange={handleChangeDescription} />
+        <input type="text" name="popup__input-text_profession" className="popup__input popup__input_form_profession popup__input_border-bottom_black" minLength="2" maxLength="200" placeholder="Профессия" required value={description} onChange={handleChangeDescription} />
         <span className="popup__input-text popup__input-text_profession-error"></span>
       </>
     </PopupWithForm>

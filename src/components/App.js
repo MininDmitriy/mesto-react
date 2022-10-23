@@ -17,6 +17,7 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({bool: false, alt: '', src: ''});
   const [currentUser, setCurrentUser] = useState('');
   const [cards, setCards] = useState([]);
+  const [renderLoading, setRenderLoading] = useState(false);
 
   useEffect(() => {
     Promise.all([api.getInfoAboutProfile(), api.getInfoAboutCards()])
@@ -46,6 +47,7 @@ function App() {
   }
 
   function handleUpdateUser({name, about}) {
+    setRenderLoading(true);
     api.changeProfile({newName: name, newInfo: about})
       .then((userData) => {
         setCurrentUser(userData);
@@ -56,9 +58,13 @@ function App() {
       .catch(err => {
         console.log(err);
       })
+      .finally(() => {
+        setRenderLoading(false);
+      });
   }
 
   function handleUpdateAvatar({avatar}) {
+    setRenderLoading(true);
     api.changeAvatar({avatarNew: avatar})
       .then((userData) => {
         setCurrentUser(userData);
@@ -69,9 +75,13 @@ function App() {
       .catch(err => {
         console.log(err);
       })
+      .finally(() => {
+        setRenderLoading(false);
+      });
   }
 
   function handleAddPlaceSubmit({name, link}) {
+    setRenderLoading(true);
     api.addNewCard({name: name, link: link})
       .then((newCard) => {
         setCards([newCard, ...cards]);
@@ -82,6 +92,9 @@ function App() {
       .catch(err => {
         console.log(err);
       })
+      .finally(() => {
+        setRenderLoading(false);
+      });
   }
 
   function handleEditAvatarClick() {
@@ -115,11 +128,11 @@ function App() {
 
       <Footer />
 
-      <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
+      <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} buttonText={renderLoading}/>
 
-      <AddPlacePopup onClose={closeAllPopups} isOpen={isAddPlacePopupOpen} onAddPlace={handleAddPlaceSubmit} />
+      <AddPlacePopup onClose={closeAllPopups} isOpen={isAddPlacePopupOpen} onAddPlace={handleAddPlaceSubmit} buttonText={renderLoading} />
 
-      <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
+      <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} buttonText={renderLoading}/>
 
       <PopupWithForm title="Вы уверены?" buttonText="Да" name="form_delete-place" />
 
