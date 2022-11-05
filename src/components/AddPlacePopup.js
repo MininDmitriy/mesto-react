@@ -1,34 +1,36 @@
 import PopupWithForm from './PopupWithForm';
-import { useState } from 'react';
+import { useEffect } from 'react';
+import { useFormAndValidation } from '../hooks/useFormAndValidation';
 
 function AddPlacePopup(props) {
-  const [name, setName] = useState('');
-  const [link, setLink] = useState('');
+  const { values, handleChange, errors, isValid, resetForm, setValues, setIsValid } = useFormAndValidation();
 
-  function handleAddNamePlace(e) {
-    setName(e.target.value);
-  }
-
-  function handleAddLinkPlace(e) {
-    setLink(e.target.value);
-  }
+  useEffect(() => {
+    setValues({newCardName: '', newCardLink: ''});
+  },[]);
 
   function handleSubmit(e) {
     e.preventDefault();
+    resetForm();
 
     props.onAddPlace({
-      name: name,
-      link: link
+      name: values.newCardName,
+      link: values.newCardLink
     })
   }
 
+  function closePopupAndResetForm() {
+    props.onClose();
+    resetForm();
+  }
+
   return(
-    <PopupWithForm onClose={props.onClose} isOpen={props.isOpen ? 'popup_opened' : ''} title="Новое место" buttonText={props.buttonText ?  'Сохранение...' : 'Создать'} name="form_place" onSubmit={handleSubmit}>
+    <PopupWithForm onClose={closePopupAndResetForm} isOpen={props.isOpen ? 'popup_opened' : ''} title="Новое место" buttonText={props.buttonText ?  'Сохранение...' : 'Создать'} name="form_place" onSubmit={handleSubmit}>
       <>
-        <input type="text" name="popup__input-text_name-place" className="popup__input popup__input_form_name-place popup__input_border-bottom_black" placeholder="Название" minLength="2" maxLength="30" value={name} onChange={handleAddNamePlace} required />
-        <span className="popup__input-text popup__input-text_name-place-error"></span>
-        <input type="url" name="popup__input-text_source-on-place" className="popup__input popup__input_form_source-on-place popup__input_border-bottom_black" placeholder="Ссылка на картинку" value={link} onChange={handleAddLinkPlace} required />
-        <span className="popup__input-text popup__input-text_source-on-place-error"></span>
+        <input type="text" name="newCardName" className="popup__input popup__input_form_name-place popup__input_border-bottom_black" placeholder="Название" minLength="2" maxLength="30" value={values.newCardName || ''}  onChange={handleChange} required />
+        <span className={`popup__input-text ${!isValid ? "popup__input-text_error-visible" : ""}`}>{errors.newCardName}</span>
+        <input type="url" name="newCardLink" className="popup__input popup__input_form_source-on-place popup__input_border-bottom_black" placeholder="Ссылка на картинку" value={values.newCardLink || ''}  onChange={handleChange} required />
+        <span className={`popup__input-text ${!isValid ? "popup__input-text_error-visible" : ""}`}>{errors.newCardLink}</span>
       </>
     </PopupWithForm>
   )

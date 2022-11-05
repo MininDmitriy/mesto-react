@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
-function Card({card, onCardClick, onCardLike, onCardDelete}) {
+function Card({card, onCardClick, onCardLike, onCardDelete, setCardId, onOpenConfirmationPopup}) {
   const currentUser = useContext(CurrentUserContext);
   const isOwn = card.owner._id === currentUser._id;
   const cardDeleteButtonClassName = (
@@ -9,7 +9,7 @@ function Card({card, onCardClick, onCardLike, onCardDelete}) {
   );
   const isLiked = card.likes.some(i => i._id === currentUser._id);
   const cardLikeButtonClassName = (
-    `${isLiked ? 'card__button-like card__button-like_active' : 'card__button-like'}`
+    `card__button-like ${isLiked ? 'card__button-like_active' : ''}`
   );
 
   function handleClick() {
@@ -20,14 +20,15 @@ function Card({card, onCardClick, onCardLike, onCardDelete}) {
     onCardLike(card);
   }
 
-  function handleDeleteClick() {
-    onCardDelete(card);
+  function confirmationPopup() {
+    onOpenConfirmationPopup();
+    setCardId(card._id);
   }
 
   return(
     <li className="card">
       <img className="card__image" src={card.link} alt={card.name} onClick={handleClick}/>
-      <button aria-label="Delete" className={cardDeleteButtonClassName} onClick={handleDeleteClick} type="button"></button>
+      <button aria-label="Delete" className={cardDeleteButtonClassName} onClick={confirmationPopup} type="button"></button>
       <div className="card__body">
         <h2 className="card__title">{card.name}</h2>
         <div className="card__container-for-info-like">
